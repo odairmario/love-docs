@@ -1,21 +1,22 @@
 from_latest_tag = true
 ignore_merge_commits = true
-disable_changelog = true
+disable_changelog = false
 
 pre_bump_hooks = [
-    "cargo set-version {{version}}",
+    "cargo set-version --workspace {{version}}",
 ]
 
-#post_bump_hooks = [
-#    "git push origin main --tags",
-#]
+post_bump_hooks = [
+    "git push origin main",
+    "git push origin {{version}}",
+]
 
 [changelog]
 path = "CHANGELOG.md"
 template = "remote"
 remote = "github.com"
-repository = "https://github.com/odairmario/love-docs"
-owner = "Odair M."
+repository = "love-docs"
+owner = "odairmario"
 
 [commit_types]
 # Groups commits in the changelog
