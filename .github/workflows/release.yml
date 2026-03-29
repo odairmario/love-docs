@@ -4,12 +4,20 @@ on:
   push:
     branches:
       - main
+  pull_request:
+    types: [ closed ]
+    branches:
+      - main
 
 jobs:
   publish:
     runs-on: ubuntu-latest
-    # Required if you want to use the default GITHUB_TOKEN,
-    # but since we use a GitHub App, it's a safety backup.
+
+    # Only run on direct push or merged PRs (not closed-without-merge)
+    if: >-
+      github.event_name == 'push' ||
+      (github.event_name == 'pull_request' && github.event.pull_request.merged == true)
+
     permissions:
       contents: write
 
@@ -24,25 +32,35 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
         with:
-          # Use the App token to allow pushing to protected main branch
           token: ${{ steps.generate_token.outputs.token }}
-          # Fetch all history so Cocogitto can calculate the next version
           fetch-depth: 0
 
       - name: Install Rust Toolchain
         uses: dtolnay/rust-toolchain@stable
 
       - name: Install cargo-edit
-        # Required for the 'cargo set-version' hook in your cog.toml
         run: cargo install cargo-edit
 
       - name: Configure Git Identity
         run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git config user.name "love-docs-Release-Bot"
+          git config user.email "love-docs-Release-Bot@users.noreply.github.com"
 
       - name: Semver Release with Cocogitto
+        id: release
         uses: cocogitto/cocogitto-action@v3
         with:
           release: true
-          # This handles 'cog bump --auto' and pushes the new commit + tag
+          git-user: "love-docs-Release-Bot"
+          git-user-email: "love-docs-Release-Bot@users.noreply.github.com"
+
+      - name: Create GitHub Release
+        if: steps.release.outputs.version != ''
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ steps.release.outputs.version }}
+          name: v${{ steps.release.outputs.version }}
+          generate_release_notes: false
+          body_path: CHANGELOG.md
+        env:
+          GITHUB_TOKEN: ${{ steps.generate_token.outputs.token }}
