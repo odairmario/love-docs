@@ -1,0 +1,18 @@
+[package]
+name = "love-docs"
+version = "0.1.0"
+edition = "2024"
+
+[lints.rust]
+unsafe_code = "forbid" # Impede o uso de código inseguro
+missing_docs = "warn"  # Avisa se faltar documentação em itens públicos
+
+[lints.clippy]
+all = "warn"          # Habilita o grupo padrão de lints
+pedantic = "warn"
+nursery = "warn"
+
+[dependencies]
+
+[dev-dependencies]
+rstest = "0.26.1"

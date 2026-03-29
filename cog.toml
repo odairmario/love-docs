@@ -1,0 +1,35 @@
+from_latest_tag = true
+ignore_merge_commits = true
+disable_changelog = true
+
+pre_bump_hooks = [
+    "cargo set-version {{version}}",
+]
+
+post_bump_hooks = [
+    "git push origin main --tags",
+]
+
+[changelog]
+path = "CHANGELOG.md"
+template = "remote"
+remote = "github.com"
+repository = "https://github.com/odairmario/love-docs"
+owner = "Odair M."
+
+[commit_types]
+# Groups commits in the changelog
+feat = { changelog_title = "🚀 Features" }
+fix = { changelog_title = "🐛 Bug Fixes" }
+refactor = { changelog_title = "♻️ Refactoring" }
+perf = { changelog_title = "⚡ Performance" }
+docs = { changelog_title = "📚 Documentation" }
+style = { changelog_title = "🎨 Style" }
+test = { changelog_title = "✅ Tests" }
+build = { changelog_title = "🏗️ Build" }
+ci = { changelog_title = "👷 CI/CD" }
+chore = { changelog_title = "🔧 Miscellaneous Chores" }
+revert = { changelog_title = "⏪ Reverts" }
+
+[git_hooks.commit-msg]
+script = "cog verify --file $1"
