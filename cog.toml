@@ -6,9 +6,9 @@ pre_bump_hooks = [
     "cargo set-version {{version}}",
 ]
 
-post_bump_hooks = [
-    "git push origin main --tags",
-]
+#post_bump_hooks = [
+#    "git push origin main --tags",
+#]
 
 [changelog]
 path = "CHANGELOG.md"
