@@ -1,0 +1,13 @@
+[package]
+name = "love-docs-core"
+version.workspace = true
+edition.workspace = true
+
+[lints]
+workspace = true
+
+[dependencies]
+
+[dev-dependencies]
+rstest.workspace = true
+
