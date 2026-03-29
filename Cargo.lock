@@ -89,21 +89,21 @@ dependencies = [
 
 [[package]]
 name = "love-docs"
-version = "0.1.0"
+version = "0.2.0"
 dependencies = [
  "rstest",
 ]
 
 [[package]]
 name = "love-docs-core"
-version = "0.1.0"
+version = "0.2.0"
 dependencies = [
  "rstest",
 ]
 
 [[package]]
 name = "love-docs-tauri"
-version = "0.1.0"
+version = "0.2.0"
 dependencies = [
  "rstest",
 ]
