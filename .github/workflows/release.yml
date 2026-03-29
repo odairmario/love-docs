@@ -1,0 +1,48 @@
+name: Release
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    # Required if you want to use the default GITHUB_TOKEN,
+    # but since we use a GitHub App, it's a safety backup.
+    permissions:
+      contents: write
+
+    steps:
+      - name: Generate GitHub App Token
+        id: generate_token
+        uses: tibdex/github-app-token@v2
+        with:
+          app_id: ${{ secrets.APP_ID }}
+          private_key: ${{ secrets.APP_PRIVATE_KEY }}
+
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          # Use the App token to allow pushing to protected main branch
+          token: ${{ steps.generate_token.outputs.token }}
+          # Fetch all history so Cocogitto can calculate the next version
+          fetch-depth: 0
+
+      - name: Install Rust Toolchain
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Install cargo-edit
+        # Required for the 'cargo set-version' hook in your cog.toml
+        run: cargo install cargo-edit
+
+      - name: Configure Git Identity
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+      - name: Semver Release with Cocogitto
+        uses: cocogitto/cocogitto-action@v3
+        with:
+          release: true
+          # This handles 'cog bump --auto' and pushes the new commit + tag
