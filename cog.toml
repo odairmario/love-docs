@@ -2,14 +2,12 @@ from_latest_tag = true
 ignore_merge_commits = true
 disable_changelog = false
 
+skip_ci = "[skip ci]"
+
 pre_bump_hooks = [
     "cargo set-version --workspace {{version}}",
 ]
 
-post_bump_hooks = [
-    "git push origin main",
-    "git push origin {{version}}",
-]
 
 [changelog]
 path = "CHANGELOG.md"
