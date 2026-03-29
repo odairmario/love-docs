@@ -1,18 +1,36 @@
 [package]
 name = "love-docs"
+version.workspace = true
+edition.workspace = true
+
+[workspace]
+members = [
+    ".",
+    "core",
+    "src-tauri",
+]
+resolver = "2"
+
+[workspace.package]
 version = "0.1.0"
 edition = "2024"
 
-[lints.rust]
-unsafe_code = "forbid" # Impede o uso de código inseguro
-missing_docs = "warn"  # Avisa se faltar documentação em itens públicos
+[workspace.lints.rust]
+unsafe_code = "forbid"
+missing_docs = "warn"
 
-[lints.clippy]
-all = "warn"          # Habilita o grupo padrão de lints
+[workspace.lints.clippy]
+all = "warn"
 pedantic = "warn"
 nursery = "warn"
+
+[workspace.dependencies]
+rstest = "0.26.1"
+
+[lints]
+workspace = true
 
 [dependencies]
 
 [dev-dependencies]
-rstest = "0.26.1"
+rstest.workspace = true
